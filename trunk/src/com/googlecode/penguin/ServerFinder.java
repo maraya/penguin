@@ -4,23 +4,28 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultListModel;
 import org.cybergarage.upnp.ControlPoint;
 import org.cybergarage.upnp.Device;
 import org.cybergarage.upnp.device.InvalidDescriptionException;
 import org.cybergarage.upnp.device.SearchResponseListener;
 import org.cybergarage.upnp.ssdp.SSDPPacket;
+import com.googlecode.penguin.panels.MediaRenderPanel;
+import com.googlecode.penguin.panels.MediaServerPanel;
 
 public class ServerFinder extends ControlPoint implements SearchResponseListener {
-	private List<MediaServer> mediaServerList;
+	public static List<MediaServer> mediaServerList;
+	public static List<MediaRender> mediaRenderList;
 	private List<String> mediaServerLocation, mediaRenderLocation;
-	private DefaultListModel mediaServerModel;
+	private MediaServerPanel mediaServerPanel;
+	private MediaRenderPanel mediaRenderPanel;
 	
-	public ServerFinder (DefaultListModel mediaServerModel) {
+	public ServerFinder (MediaServerPanel mediaServerPanel, MediaRenderPanel mediaRenderPanel) {
         addSearchResponseListener(this);        
         mediaServerList = new ArrayList<MediaServer>();
+        mediaRenderList = new ArrayList<MediaRender>();
         mediaRenderLocation = mediaServerLocation = new ArrayList<String>();
-        this.mediaServerModel = mediaServerModel;
+        this.mediaServerPanel = mediaServerPanel;
+        this.mediaRenderPanel = mediaRenderPanel;
         
         try {
 	        start();
@@ -36,13 +41,13 @@ public class ServerFinder extends ControlPoint implements SearchResponseListener
 		String target = ssdpPacket.getST();
         String location = ssdpPacket.getLocation();
         
-        if (target.equalsIgnoreCase("urn:schemas-upnp-org:device:MediaServer:1")) {
+        if (target.equalsIgnoreCase("urn:schemas-upnp-org:device:MediaServer:1")) {        	
         	if (!mediaServerLocation.contains(location)) {
 	            try {
 	            	Device device = new Device(new URL(location).openStream());
 	            	MediaServer mediaServer = new MediaServer(device, location);
 	            	mediaServerList.add(mediaServer);
-	            	mediaServerModel.addElement(mediaServer);
+	            	mediaServerPanel.mediaServerModel.addElement(mediaServer);
 	            	
 	            } catch (IOException e) {
 	            	System.out.println(e.getMessage());
@@ -53,11 +58,29 @@ public class ServerFinder extends ControlPoint implements SearchResponseListener
 	            }
         	}        	
         } else if (target.equalsIgnoreCase("urn:schemas-upnp-org:device:MediaRenderer:1")) {
-        	if (!mediaRenderLocation.contains(location)) {
-        		System.out.println(location);
-        		
-        		mediaRenderLocation.add(location);
+        	if (!mediaRenderLocation.contains(location)) {        		
+        		try {
+        			Device device = new Device(new URL(location).openStream());
+        			MediaRender mediaRender = new MediaRender(device, location);
+        			mediaRenderList.add(mediaRender); 
+        			mediaRenderPanel.mediaRenderModel.addElement(mediaRender);
+        			
+        		} catch (IOException e) {
+	            	System.out.println(e.getMessage());
+	            } catch (InvalidDescriptionException e) {
+	            	System.out.println(e.getMessage());
+	            } finally {
+	            	mediaRenderLocation.add(location);
+	            }        		
         	}
         }
 	}
+	
+	public static MediaServer getMediaServer(int index) {
+		return mediaServerList.get(index);
+	}
+	
+	public static MediaRender getMediaRender(int index) {
+		return mediaRenderList.get(index);
+	}	
 }

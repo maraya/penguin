@@ -1,4 +1,4 @@
-package com.googlecode.penguin;
+package com.googlecode.penguin.renders;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -10,12 +10,14 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import com.googlecode.penguin.MediaServer;
+
 public class MediaServerIconRender extends JLabel implements ListCellRenderer {
 	private static final long serialVersionUID = 20110214171610871L;
 	private ImageIcon defaultIcon;
 	
 	public MediaServerIconRender() {		
-		defaultIcon = new ImageIcon(MediaServerIconRender.class.getResource("resources/unknown_device_48x48.png"));		
+		defaultIcon = new ImageIcon(MediaServerIconRender.class.getResource("/com/googlecode/penguin/resources/unknown_device_48x48.png"));		
 	}
 	
 	@Override
@@ -31,7 +33,7 @@ public class MediaServerIconRender extends JLabel implements ListCellRenderer {
 	        }
 			
 			setText(mediaServer.getFriendlyName());				
-			setToolTipText(mediaServer.getManufacture() +" - "+ mediaServer.getModelName() + " ("+ mediaServer.getHost() +")");			
+			setToolTipText(mediaServer.getManufacture() +" - "+ mediaServer.getModelName());			
 			
 			List<ImageIcon> iconList = mediaServer.getIconList();
 			

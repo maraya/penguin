@@ -1,16 +1,16 @@
 package com.googlecode.penguin;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.EventQueue;
-import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
+import com.googlecode.penguin.panels.MediaRenderPanel;
+import com.googlecode.penguin.panels.MediaServerPanel;
 
 public class PenguinPlayer extends JFrame {
 	private static final long serialVersionUID = 924017654194370291L;
@@ -23,49 +23,44 @@ public class PenguinPlayer extends JFrame {
 	}
 	
 	private void initComponents() {
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(255, 255, 255));	
+		JPanel mainPanel = new JPanel();
+		JTabbedPane tabs = new JTabbedPane();
+		mainPanel.setBackground(new Color(255, 255, 255));
 		
-		JScrollPane scroll = new JScrollPane();
-		DefaultListModel mediaServerModel = new DefaultListModel();
-		
-		JList mediaServerList = new JList(mediaServerModel);
-		mediaServerList.setCellRenderer(new MediaServerIconRender());
-		mediaServerList.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        scroll.setViewportView(mediaServerList);
+        GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+        	mainPanelLayout.createParallelGroup(Alignment.LEADING)
+            .addComponent(tabs, GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+        );
+        mainPanelLayout.setVerticalGroup(
+        	mainPanelLayout.createParallelGroup(Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addComponent(tabs, GroupLayout.PREFERRED_SIZE, 378, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        GroupLayout layout = new GroupLayout(panel);
         
-        panel.setLayout(layout);
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-        	layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scroll, GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                .addContainerGap())
+            layout.createParallelGroup(Alignment.LEADING)
+            .addComponent(mainPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-        	layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scroll, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(209, Short.MAX_VALUE))
+            layout.createParallelGroup(Alignment.LEADING)
+            .addComponent(mainPanel, GroupLayout.PREFERRED_SIZE, 351, GroupLayout.PREFERRED_SIZE)
         );
-
-        GroupLayout layout2 = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout2);
-        layout2.setHorizontalGroup(
-            layout2.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );        
-        layout2.setVerticalGroup(
-        	layout2.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        
+                
         pack();
         
-        new ServerFinder(mediaServerModel);
+        MediaServerPanel mediaServerPanel = new MediaServerPanel();
+        MediaRenderPanel mediaRenderPanel = new MediaRenderPanel();
+        
+        tabs.addTab("MediaServers", mediaServerPanel);
+        tabs.addTab("MediaRenderers", mediaRenderPanel);
+        
+        new ServerFinder(mediaServerPanel, mediaRenderPanel);
 	}
 	
 	public static void main (String args[]) {

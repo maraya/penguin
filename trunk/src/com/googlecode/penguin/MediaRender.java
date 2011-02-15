@@ -8,18 +8,24 @@ import javax.swing.ImageIcon;
 import org.cybergarage.upnp.Device;
 import org.cybergarage.upnp.Icon;
 import org.cybergarage.upnp.IconList;
+import org.cybergarage.upnp.Service;
 
-public class MediaServer {
+public class MediaRender {
 	private Device device;
 	private URL locationURL;
 	
-	public MediaServer (Device device, String location) {
+	public MediaRender (Device device, String location) {
 		try {
 			this.device = device;
-			this.locationURL = new URL(location);			
+			this.locationURL = new URL(location);
 		} catch (MalformedURLException e) {
 			System.out.println(e.getMessage());
-		}		
+		}
+	}
+	
+	public Service getAVTransportService () {
+		Service service = device.getService("urn:schemas-upnp-org:service:AVTransport:1");
+		return service;
 	}
 	
 	public List<ImageIcon> getIconList () throws MalformedURLException {		
@@ -50,11 +56,7 @@ public class MediaServer {
 		return device.getModelName();
 	}
 	
-	public String getCompleteHost() {
-		return locationURL.getProtocol()+"://"+locationURL.getAuthority();
-	}
-	
-	public Device getDevice() {
-		return device;
+	public String getHost() {
+		return locationURL.getAuthority();
 	}
 }

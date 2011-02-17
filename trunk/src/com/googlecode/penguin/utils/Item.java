@@ -1,12 +1,16 @@
 package com.googlecode.penguin.utils;
 
+import javax.swing.ImageIcon;
+
 import org.cybergarage.xml.Node;
 
 public class Item {
 	private Node node;
+	private ImageIcon icon;
 	
 	public Item (Node node) {			
 		this.node = node;
+		this.icon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/track.jpg"));
 	}
 		
 	public String getID() {
@@ -79,5 +83,9 @@ public class Item {
 		} else {
 			return false;
 		}		
+	}
+	
+	public ImageIcon getIcon() {
+		return icon;
 	}
 }

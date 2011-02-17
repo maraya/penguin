@@ -13,8 +13,9 @@ import com.googlecode.penguin.panels.MediaRenderPanel;
 import com.googlecode.penguin.panels.MediaServerPanel;
 
 public class ServerFinder extends ControlPoint implements SearchResponseListener {
-	public static List<MediaServer> mediaServerList;
-	public static List<MediaRender> mediaRenderList;
+	private static List<MediaServer> mediaServerList;
+	private static List<MediaRender> mediaRenderList;
+	private static int mediaServerIndex; 
 	private List<String> mediaServerLocation, mediaRenderLocation;
 	private MediaServerPanel mediaServerPanel;
 	private MediaRenderPanel mediaRenderPanel;
@@ -26,7 +27,7 @@ public class ServerFinder extends ControlPoint implements SearchResponseListener
         mediaRenderLocation = mediaServerLocation = new ArrayList<String>();
         this.mediaServerPanel = mediaServerPanel;
         this.mediaRenderPanel = mediaRenderPanel;
-        
+                
         try {
 	        start();
 	        search("urn:schemas-upnp-org:device:MediaServer:1");
@@ -43,19 +44,11 @@ public class ServerFinder extends ControlPoint implements SearchResponseListener
         
         if (target.equalsIgnoreCase("urn:schemas-upnp-org:device:MediaServer:1")) {        	
         	if (!mediaServerLocation.contains(location)) {
-	            try {
-	            	Device device = new Device(new URL(location).openStream());
-	            	MediaServer mediaServer = new MediaServer(device, location);
-	            	mediaServerList.add(mediaServer);
-	            	mediaServerPanel.mediaServerModel.addElement(mediaServer);
-	            	
-	            } catch (IOException e) {
-	            	System.out.println(e.getMessage());
-	            } catch (InvalidDescriptionException e) {
-	            	System.out.println(e.getMessage());
-	            } finally {
-	            	mediaServerLocation.add(location);
-	            }
+	            MediaServer mediaServer = new MediaServer(location);
+	            mediaServerList.add(mediaServer);
+	            mediaServerPanel.mediaServerModel.addElement(mediaServer);	            
+	            mediaServerLocation.add(location);
+	            
         	}        	
         } else if (target.equalsIgnoreCase("urn:schemas-upnp-org:device:MediaRenderer:1")) {
         	if (!mediaRenderLocation.contains(location)) {        		
@@ -83,4 +76,12 @@ public class ServerFinder extends ControlPoint implements SearchResponseListener
 	public static MediaRender getMediaRender(int index) {
 		return mediaRenderList.get(index);
 	}	
+	
+	public static void setMediaServerSelectedIndex(int index) {
+		mediaServerIndex = index;
+	}	
+	
+	public static int getMediaServerSelectedIndex() {
+		return mediaServerIndex;
+	}
 }

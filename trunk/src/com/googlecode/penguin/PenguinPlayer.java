@@ -16,7 +16,7 @@ public class PenguinPlayer extends JFrame {
 	private static final long serialVersionUID = 924017654194370291L;
 	
 	public PenguinPlayer() {		
-		setTitle("pruebaaaa!");	
+		setTitle("Penguin Player");	
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);		
 		setIconImage(new ImageIcon(PenguinPlayer.class.getResource("resources/penguin_icon.png")).getImage());
 		initComponents();			

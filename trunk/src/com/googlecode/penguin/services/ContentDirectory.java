@@ -5,7 +5,6 @@ import org.cybergarage.upnp.Device;
 import org.cybergarage.upnp.Service;
 import com.googlecode.penguin.MediaServer;
 import com.googlecode.penguin.utils.ActionException;
-import com.googlecode.penguin.utils.DIDL;
 import com.googlecode.penguin.utils.ServiceException;
 
 public class ContentDirectory {	
@@ -13,44 +12,67 @@ public class ContentDirectory {
 	private String host;
 	private Service service;
 	
-	public ContentDirectory(MediaServer mediaServer) {
+	public ContentDirectory(MediaServer mediaServer) throws ServiceException {
 		this.device = mediaServer.getDevice();
-		this.host = mediaServer.getCompleteHost();
+		this.host = mediaServer.getCompleteHost();		
+		
+		setService();
 	}
 	
-	public Service getService () throws ServiceException {		
-		try {
+	private void setService() throws ServiceException {
+		try {			
 			service = device.getService("urn:schemas-upnp-org:service:ContentDirectory:1");
-			service.setControlURL(host + service.getControlURL());
-			service.setEventSubURL(host + service.getEventSubURL());
-			service.setSCPDURL(host + service.getSCPDURL());
+			String controlURL = service.getControlURL();
+			String eventSubURL = service.getEventSubURL();
+			String scpdURL = service.getSCPDURL();
+			
+			if (!controlURL.startsWith("http://")) {
+				if (controlURL.charAt(0) != '/') {
+					controlURL = host +"/"+ controlURL;
+				} else {
+					controlURL = host + controlURL;
+				}
+			}
+			
+			if (!eventSubURL.startsWith("http://")) {
+				if (eventSubURL.charAt(0) != '/') {
+					eventSubURL = host +"/"+ eventSubURL;
+				} else {
+					eventSubURL = host +eventSubURL;
+				}
+			}
+			
+			if (!scpdURL.startsWith("http://")) {
+				if (scpdURL.charAt(0) != '/') {
+					scpdURL = host +"/"+ scpdURL;
+				} else {
+					scpdURL = host + scpdURL;
+				}
+			}
+			
+			service.setControlURL(controlURL);
+			service.setEventSubURL(eventSubURL);
+			service.setSCPDURL(scpdURL);
 			
 		} catch (Exception e) {
-			throw new ServiceException("ContentDirectory");
-		}
-		return service;
+			throw new ServiceException("ContentDirectory", e.getMessage());
+		}		
 	}
 	
-	public DIDL browse () throws ActionException {
+	public String browse (String objectID) throws ActionException {
 		String result = null;
-		try {
-			Action action = getService().getAction("Browse");
+		
+		Action action = service.getAction("Browse");
 			
-			action.setArgumentValue("ObjectID", "0$1$7");
-			action.setArgumentValue("BrowseFlag", "BrowseDirectChildren");
-			action.setArgumentValue("Filter", "*");
+		action.setArgumentValue("ObjectID", objectID);
+		action.setArgumentValue("BrowseFlag", "BrowseDirectChildren");
+		action.setArgumentValue("Filter", "*");
 			
-			if (action.postControlAction() == false) {
-				throw new ActionException("Browse");
-	            //System.out.println("-------->" + action.getStatus().getDescription());
-	            //System.out.println("-------->" + action.getControlStatus().getDescription());
-			}
-	        result = action.getArgument("Result").getValue();
-	        
-		} catch (ServiceException e) {
-			System.out.println(e.getMessage());
+		if (action.postControlAction() == false) {
+			throw new ActionException("Browse", action.getStatus().getDescription());	            
 		}
 		
-		return new DIDL(result);
-	}
+	    result = action.getArgument("Result").getValue();        	    
+		return result;
+	}	
 }

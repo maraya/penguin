@@ -1,5 +1,6 @@
 package com.googlecode.penguin;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,18 +9,24 @@ import javax.swing.ImageIcon;
 import org.cybergarage.upnp.Device;
 import org.cybergarage.upnp.Icon;
 import org.cybergarage.upnp.IconList;
+import org.cybergarage.upnp.device.InvalidDescriptionException;
 
 public class MediaServer {
 	private Device device;
 	private URL locationURL;
 	
-	public MediaServer (Device device, String location) {
+	public MediaServer (String location) {
 		try {
-			this.device = device;
-			this.locationURL = new URL(location);			
+			this.device = new Device(new URL(location).openStream());			 
+			this.locationURL = new URL(location);
+			
 		} catch (MalformedURLException e) {
 			System.out.println(e.getMessage());
-		}		
+		} catch (InvalidDescriptionException e) {
+			System.out.println(e.getMessage());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	public List<ImageIcon> getIconList () throws MalformedURLException {		

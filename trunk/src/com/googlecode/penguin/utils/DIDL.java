@@ -7,8 +7,8 @@ import org.cybergarage.xml.ParserException;
 import org.cybergarage.xml.parser.XercesParser;
 
 public class DIDL {
-	private List<Container> containerList;
-	private List<Item> itemList;
+	private static List<Container> containerList;
+	private static List<Item> itemList;
 	
 	public DIDL (String content) {
 		containerList = new ArrayList<Container>();
@@ -42,4 +42,12 @@ public class DIDL {
 	public List<Item> getItemList() {
 		return itemList;
 	}
+	
+	public static Container getContainer(int index) {
+		return containerList.get(index);		
+	}
+	
+	public static Item getItem(int index) {
+		return itemList.get(index);		
+	}	
 }

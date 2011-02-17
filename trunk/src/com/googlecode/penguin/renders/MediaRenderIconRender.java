@@ -38,7 +38,7 @@ public class MediaRenderIconRender extends JLabel implements ListCellRenderer {
 			
 			if (iconList.size() > 0) {
 				ImageIcon icon = null;
-				for (int i=0; i<=iconList.size(); i++) {
+				for (int i=0; i<iconList.size(); i++) {
 					icon = iconList.get(i); 
 					
 					if (icon.getIconHeight() == 48 && icon.getIconWidth() == 48) {

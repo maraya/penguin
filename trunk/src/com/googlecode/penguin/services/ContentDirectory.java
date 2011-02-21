@@ -2,7 +2,7 @@ package com.googlecode.penguin.services;
 
 import org.cybergarage.upnp.Action;
 import org.cybergarage.upnp.Service;
-import com.googlecode.penguin.MediaServer;
+import com.googlecode.penguin.devices.MediaServer;
 import com.googlecode.penguin.utils.ActionException;
 import com.googlecode.penguin.utils.ServiceException;
 
@@ -69,7 +69,7 @@ public class ContentDirectory {
 			throw new ActionException("Browse", action.getStatus().getDescription());	            
 		}
 		
-	    result = action.getArgument("Result").getValue();        	    
+	    result = action.getArgument("Result").getValue();
 		return result;
 	}	
 }

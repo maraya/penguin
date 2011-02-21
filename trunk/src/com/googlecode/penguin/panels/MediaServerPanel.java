@@ -16,19 +16,22 @@ import com.googlecode.penguin.events.Pause;
 import com.googlecode.penguin.events.Play;
 import com.googlecode.penguin.events.Stop;
 import com.googlecode.penguin.listeners.ContentListListener;
-import com.googlecode.penguin.listeners.ServerListListener;
+import com.googlecode.penguin.listeners.FolderListener;
+import com.googlecode.penguin.listeners.MediaServerListListener;
 import com.googlecode.penguin.listeners.VolumeListener;
 import com.googlecode.penguin.renders.MediaContentRender;
 import com.googlecode.penguin.renders.MediaServerIconRender;
+import com.googlecode.penguin.types.Folder;
 
 public class MediaServerPanel extends JPanel {
 	private static final long serialVersionUID = 3489153513717542820L;	
 	public DefaultListModel mediaServerModel;
 	public JButton playButton, stopButton, pauseButton;
 	public DefaultListModel mediaServerContentModel;
-	public JList mediaServerContentList;
+	public JList mediaServerContentList, mediaServerList;
 	public JSlider volumeSlider;
-	
+	public Folder folder;
+		
 	public MediaServerPanel () {
 		setBackground(new Color(255, 255, 255));
 		initComponents();
@@ -37,9 +40,9 @@ public class MediaServerPanel extends JPanel {
 	private void initComponents() {
 		playButton = new JButton("Play");
 		stopButton = new JButton("Stop");
-		pauseButton = new JButton("Pause");
+		pauseButton = new JButton("Pause");		
+		folder = new Folder();
 		JLabel volumeLabel = new JLabel("Volume");
-		JLabel folderLabel = new JLabel("sd");
 		
 		volumeSlider = new JSlider();
 		volumeSlider.setValue(100);
@@ -51,14 +54,15 @@ public class MediaServerPanel extends JPanel {
 		mediaServerModel = new DefaultListModel();
 		mediaServerContentModel = new DefaultListModel();
 		
-		JList mediaServerList = new JList(mediaServerModel);
+		mediaServerList = new JList(mediaServerModel);
 		mediaServerList.setCellRenderer(new MediaServerIconRender());
-		mediaServerList.addListSelectionListener(new ServerListListener(mediaServerList, mediaServerContentModel));
+		mediaServerList.addListSelectionListener(new MediaServerListListener(this));
 		mediaServerList.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		mediaServerContentList = new JList(mediaServerContentModel);
 		mediaServerContentList.addListSelectionListener(new ContentListListener(this));
 		mediaServerContentList.setCellRenderer(new MediaContentRender());
+		mediaServerContentList.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		
 		mediaServerScroll.setViewportView(mediaServerList);
 		mediaServerContentScroll.setViewportView(mediaServerContentList);
@@ -66,32 +70,33 @@ public class MediaServerPanel extends JPanel {
 		playButton.setEnabled(false);
 		stopButton.setEnabled(false);
 		pauseButton.setEnabled(false);
+		volumeSlider.setEnabled(false);
 		
 		playButton.addActionListener(new Play(this));
 		stopButton.addActionListener(new Stop());
 		pauseButton.addActionListener(new Pause());
+		folder.addMouseListener(new FolderListener(this));
 		
 		GroupLayout layout = new GroupLayout(this);
-	    
 	    layout.setHorizontalGroup(
-	            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	            layout.createParallelGroup(Alignment.LEADING)
 	            .addGroup(layout.createSequentialGroup()
 	                .addContainerGap()
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addComponent(mediaServerScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
-	                    .addComponent(mediaServerContentScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
-	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+	                .addGroup(layout.createParallelGroup(Alignment.LEADING)
+	                    .addComponent(mediaServerScroll, GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+	                    .addComponent(mediaServerContentScroll, GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+	                    .addGroup(Alignment.TRAILING, layout.createSequentialGroup()
 	                        .addComponent(playButton)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                        .addPreferredGap(ComponentPlacement.UNRELATED)
 	                        .addComponent(stopButton)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                        .addPreferredGap(ComponentPlacement.UNRELATED)
 	                        .addComponent(pauseButton)
 	                        .addGap(31, 31, 31)
 	                        .addComponent(volumeLabel)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addComponent(volumeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                        .addPreferredGap(ComponentPlacement.RELATED)
+	                        .addComponent(volumeSlider, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
 	                        .addGap(25, 25, 25))
-	                    .addComponent(folderLabel))
+	                    .addComponent(folder))
 	                .addContainerGap())
 	    );
 	    
@@ -99,67 +104,22 @@ public class MediaServerPanel extends JPanel {
 	            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addGroup(layout.createSequentialGroup()
 	                .addContainerGap()
-	                .addComponent(mediaServerScroll, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-	                .addComponent(folderLabel)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                .addComponent(mediaServerContentScroll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+	                .addComponent(mediaServerScroll, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+	                .addPreferredGap(ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+	                .addComponent(folder)
+	                .addPreferredGap(ComponentPlacement.RELATED)
+	                .addComponent(mediaServerContentScroll, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+	                .addPreferredGap(ComponentPlacement.UNRELATED)
+	                .addGroup(layout.createParallelGroup(Alignment.LEADING)
+	                    .addGroup(layout.createParallelGroup(Alignment.BASELINE)
 	                        .addComponent(volumeLabel)
 	                        .addComponent(playButton)
 	                        .addComponent(stopButton)
 	                        .addComponent(pauseButton))
-	                    .addComponent(volumeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                    .addComponent(volumeSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 	                .addGap(28, 28, 28))
 	    );
-	    setLayout(layout);
-		
-		
-		/*
-		GroupLayout layout = new GroupLayout(this);        
-        layout.setHorizontalGroup(
-        	layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(Alignment.LEADING)
-                            .addComponent(mediaServerScroll, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
-                            .addComponent(mediaServerContentScroll, GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(playButton)
-                        .addPreferredGap(ComponentPlacement.UNRELATED)
-                        .addComponent(stopButton)
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(pauseButton)
-                        .addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                        .addComponent(volumeLabel)
-                        .addPreferredGap(ComponentPlacement.RELATED)
-                        .addComponent(volumeSlider, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-        	layout.createParallelGroup(Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(mediaServerScroll, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
-                .addComponent(mediaServerContentScroll, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(Alignment.BASELINE)
-                        .addComponent(playButton)
-                        .addComponent(stopButton)
-                        .addComponent(pauseButton)
-                        .addComponent(volumeLabel))
-                    .addComponent(volumeSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        setLayout(layout);	
-        */
+	    
+	    setLayout(layout);		
 	}
 }

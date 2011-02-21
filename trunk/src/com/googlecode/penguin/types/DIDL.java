@@ -1,4 +1,4 @@
-package com.googlecode.penguin.utils;
+package com.googlecode.penguin.types;
 
 import java.util.ArrayList;
 import java.util.List;

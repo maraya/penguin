@@ -2,9 +2,9 @@ package com.googlecode.penguin.services;
 
 import org.cybergarage.upnp.Action;
 import org.cybergarage.upnp.Service;
-import com.googlecode.penguin.MediaRender;
+import com.googlecode.penguin.devices.MediaRender;
+import com.googlecode.penguin.types.DIDLNode;
 import com.googlecode.penguin.utils.ActionException;
-import com.googlecode.penguin.utils.DIDLNode;
 import com.googlecode.penguin.utils.ServiceException;
 
 public class AVTransport {
@@ -59,10 +59,20 @@ public class AVTransport {
 	
 	public void setAVTransportURI (DIDLNode didlNode) throws ActionException {
 		Action action = service.getAction("SetAVTransportURI");
-			
+		String metaData = "<DIDL-Lite xmlns=\"urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:upnp=\"urn:schemas-upnp-org:metadata-1-0/upnp/\" xmlns:dlna=\"urn:schemas-dlna-org:device-1-0\" xmlns:pv=\"http://www.pv.com/pvns/\">" +
+						     didlNode.getNode().toString() +
+						  "</DIDL-Lite>"; 
+		String currentURI = null;
+		
+		if (didlNode.isAudioItem()) {
+			currentURI = didlNode.getAudioItem().getAudioURI();
+		} else if (didlNode.isVideoItem()) {
+			currentURI = didlNode.getVideoItem().getVideoURI();
+		}
+		
 		action.setArgumentValue("InstanceID", "0");
-		action.setArgumentValue("CurrentURI", didlNode.getAudioTrack().getTrackURI());
-		action.setArgumentValue("CurrentURIMetaData", didlNode.getNode().toString());
+		action.setArgumentValue("CurrentURI", currentURI);
+		action.setArgumentValue("CurrentURIMetaData", metaData);
 			
 		if (action.postControlAction() == false) {
 			throw new ActionException("SetAVTransportURI", action.getStatus().getDescription());	            

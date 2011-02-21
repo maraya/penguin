@@ -1,5 +1,7 @@
-package com.googlecode.penguin.utils;
+package com.googlecode.penguin.types;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import org.cybergarage.xml.Node;
 import com.googlecode.penguin.utils.interfaces.Container;
@@ -7,12 +9,14 @@ import com.googlecode.penguin.utils.interfaces.Item;
 
 public class DIDLNode implements Item, Container {
 	private Node node;
-	private ImageIcon itemIcon, containerIcon;
+	private ImageIcon containerIcon, audioIcon, imageIcon, videoIcon;
 	
 	public DIDLNode (Node node) {
 		this.node = node;
-		this.itemIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/track.jpg"));
-		this.containerIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/container.jpg"));
+		this.audioIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/icon_audio.gif"));
+		this.imageIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/icon_image.gif"));
+		this.videoIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/icon_video.gif"));		
+		this.containerIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/icon_folder.gif"));
 	}	
 	
 	public boolean isContainer() {
@@ -106,22 +110,90 @@ public class DIDLNode implements Item, Container {
 	}
 	
 	@Override
-	public AudioTrack getAudioTrack() {
-		return new AudioTrack(node.getNode("res"));
+	public AudioItem getAudioItem() {
+		if (isAudioItem()) {
+			return new AudioItem(node.getNode("res"));
+		} else {
+			return null;
+		}
 	}
 	
-	@Override
-	public ImageIcon getItemIcon() {
-		return itemIcon;
-	}
-
 	@Override
 	public String getChildCount() {
 		return node.getAttributeValue("childCount");
 	}
 
 	@Override
+	public boolean isVideoItem() {
+		Pattern pattern = Pattern.compile("videoItem");
+		Matcher matcher = pattern.matcher(getUpnpClass());
+		
+		if (matcher.find()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isAudioItem() {
+		Pattern pattern = Pattern.compile("audioItem");
+		Matcher matcher = pattern.matcher(getUpnpClass());
+		
+		if (matcher.find()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public VideoItem getVideoItem() {
+		if (isVideoItem()) {
+			return new VideoItem(node.getNode("res"));
+		} else {
+			return null;
+		}
+	}
+	
+	@Override
+	public ImageItem getImageItem() {
+		if (isImageItem()) {
+			return new ImageItem(node.getNode("res"));
+		} else {
+			return null;
+		}
+	}
+	
+	@Override
 	public ImageIcon getContainerIcon() {
 		return containerIcon;
+	}
+	
+	@Override
+	public ImageIcon getAudioIcon() {
+		return audioIcon;
+	}
+
+	@Override
+	public ImageIcon getVideoIcon() {
+		return videoIcon;
+	}
+
+	@Override
+	public ImageIcon getImageIcon() {
+		return imageIcon;
+	}
+
+	@Override
+	public boolean isImageItem() {
+		Pattern pattern = Pattern.compile("imageItem");
+		Matcher matcher = pattern.matcher(getUpnpClass());
+		
+		if (matcher.find()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

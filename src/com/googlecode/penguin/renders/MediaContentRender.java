@@ -6,7 +6,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import com.googlecode.penguin.utils.DIDLNode;
+
+import com.googlecode.penguin.types.DIDLNode;
 
 public class MediaContentRender extends JLabel implements ListCellRenderer {
 	private static final long serialVersionUID = -595708734285816793L;
@@ -20,8 +21,15 @@ public class MediaContentRender extends JLabel implements ListCellRenderer {
 			
 			if (((DIDLNode) object).isContainer()) {
 				setIcon(((DIDLNode) object).getContainerIcon());			
-			} else {
-				setIcon(((DIDLNode) object).getItemIcon());
+			} else if (((DIDLNode) object).isItem()) {
+				
+				if (((DIDLNode) object).isAudioItem()) {
+					setIcon(((DIDLNode) object).getAudioIcon());
+				} else if (((DIDLNode) object).isImageItem()) {
+					setIcon(((DIDLNode) object).getImageIcon());
+				} else if (((DIDLNode) object).isVideoItem()) {
+					setIcon(((DIDLNode) object).getVideoIcon());
+				}
 			}
 			
 			if (isSelected) {

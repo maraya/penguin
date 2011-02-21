@@ -9,7 +9,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import com.googlecode.penguin.MediaRender;
+
+import com.googlecode.penguin.devices.MediaRender;
 
 public class MediaRenderIconRender extends JLabel implements ListCellRenderer {	
 	private static final long serialVersionUID = 5991117255896371031L;

@@ -1,4 +1,4 @@
-package com.googlecode.penguin;
+package com.googlecode.penguin.devices;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

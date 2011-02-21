@@ -1,11 +1,11 @@
-package com.googlecode.penguin.utils;
+package com.googlecode.penguin.types;
 
 import org.cybergarage.xml.Node;
 
-public class AudioTrack {
+public class AudioItem {
 	private Node node;
 	
-	public AudioTrack (Node node) {
+	public AudioItem (Node node) {
 		this.node = node;
 	}	
 	
@@ -21,7 +21,7 @@ public class AudioTrack {
 		return node.getAttributeValue("protocolInfo");		
 	}
 	
-	public String getTrackURI() {
+	public String getAudioURI() {
 		return node.getValue();		
 	}
 }

@@ -2,7 +2,7 @@ package com.googlecode.penguin.services;
 
 import org.cybergarage.upnp.Action;
 import org.cybergarage.upnp.Service;
-import com.googlecode.penguin.MediaRender;
+import com.googlecode.penguin.devices.MediaRender;
 import com.googlecode.penguin.utils.ActionException;
 import com.googlecode.penguin.utils.ServiceException;
 

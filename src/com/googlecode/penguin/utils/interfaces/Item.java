@@ -1,7 +1,9 @@
 package com.googlecode.penguin.utils.interfaces;
 
 import javax.swing.ImageIcon;
-import com.googlecode.penguin.utils.AudioTrack;
+import com.googlecode.penguin.types.AudioItem;
+import com.googlecode.penguin.types.ImageItem;
+import com.googlecode.penguin.types.VideoItem;
 
 public interface Item {
 	
@@ -33,7 +35,21 @@ public interface Item {
 	
 	public String getAlbumArtURI();
 	
-	public AudioTrack getAudioTrack();
+	public AudioItem getAudioItem();
 	
-	public ImageIcon getItemIcon();
+	public VideoItem getVideoItem();
+	
+	public ImageItem getImageItem();
+	
+	public ImageIcon getAudioIcon();
+	
+	public ImageIcon getVideoIcon();
+	
+	public ImageIcon getImageIcon();
+	
+	public boolean isVideoItem();
+	
+	public boolean isAudioItem();
+	
+	public boolean isImageItem();
 }

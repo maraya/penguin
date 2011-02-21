@@ -18,7 +18,7 @@ public class PenguinPlayer extends JFrame {
 	public PenguinPlayer() {		
 		setTitle("Penguin Player");	
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);		
-		setIconImage(new ImageIcon(PenguinPlayer.class.getResource("resources/penguin_icon.png")).getImage());
+		setIconImage(new ImageIcon(PenguinPlayer.class.getResource("resources/icon_audio.gif")).getImage());
 		initComponents();			
 	}
 	
@@ -30,12 +30,12 @@ public class PenguinPlayer extends JFrame {
         GroupLayout mainPanelLayout = new GroupLayout(mainPanel);        
         mainPanelLayout.setHorizontalGroup(
         	mainPanelLayout.createParallelGroup(Alignment.LEADING)
-            .addComponent(tabs, GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
+            .addComponent(tabs, GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
         	mainPanelLayout.createParallelGroup(Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addComponent(tabs, GroupLayout.PREFERRED_SIZE, 378, GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabs, GroupLayout.PREFERRED_SIZE, 360, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanel.setLayout(mainPanelLayout);

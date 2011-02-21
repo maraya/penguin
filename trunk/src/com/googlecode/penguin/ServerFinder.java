@@ -45,6 +45,9 @@ public class ServerFinder extends ControlPoint implements SearchResponseListener
         
         if (target.equalsIgnoreCase("urn:schemas-upnp-org:device:MediaServer:1")) {        	
         	if (!mediaServerLocation.contains(location)) {
+        		
+        		System.out.println(location);
+        		
         		try {
         			MediaServer mediaServer = new MediaServer(location);
         			mediaServerList.add(mediaServer);
@@ -61,6 +64,9 @@ public class ServerFinder extends ControlPoint implements SearchResponseListener
         	}        	
         } else if (target.equalsIgnoreCase("urn:schemas-upnp-org:device:MediaRenderer:1")) {
         	if (!mediaRenderLocation.contains(location)) {
+        		
+        		System.out.println(location);
+        		
         		try {        			
         			MediaRender mediaRender = new MediaRender(location);
         			mediaRenderList.add(mediaRender); 

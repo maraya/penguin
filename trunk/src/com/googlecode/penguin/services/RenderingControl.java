@@ -66,5 +66,19 @@ public class RenderingControl {
 		if (action.postControlAction() == false) {
 			throw new ActionException("SetVolume", action.getStatus().getDescription());	            
 		}		
-	}	
+	}
+	
+	public int getVolume () throws ActionException {
+		Action action = service.getAction("GetVolume");
+		
+		action.setArgumentValue("InstanceID", "0");
+		action.setArgumentValue("Channel", "Master");
+			
+		if (action.postControlAction() == false) {
+			throw new ActionException("GetVolume", action.getStatus().getDescription());	            
+		}
+		
+		int volume = action.getArgument("CurrentVolume").getIntegerValue();        	    
+		return volume;
+	}		
 }

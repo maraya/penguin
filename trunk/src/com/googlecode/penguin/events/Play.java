@@ -4,22 +4,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
 import com.googlecode.penguin.MediaRender;
 import com.googlecode.penguin.ServerFinder;
 import com.googlecode.penguin.listeners.ContentListListener;
 import com.googlecode.penguin.panels.MediaServerPanel;
 import com.googlecode.penguin.services.AVTransport;
+import com.googlecode.penguin.services.RenderingControl;
 import com.googlecode.penguin.utils.ActionException;
 import com.googlecode.penguin.utils.DIDL;
 import com.googlecode.penguin.utils.DIDLNode;
 import com.googlecode.penguin.utils.ServiceException;
 
 public class Play implements ActionListener{
-	private JButton stopButton, pauseButton;	
+	private JButton stopButton, pauseButton;
+	private JSlider volumeSlider;
 	
 	public Play (MediaServerPanel mediaServerPanel) {
 		stopButton = mediaServerPanel.stopButton;
-		pauseButton = mediaServerPanel.pauseButton;		
+		pauseButton = mediaServerPanel.pauseButton;	
+		volumeSlider = mediaServerPanel.volumeSlider;
 	}
 	
 	@Override
@@ -32,6 +36,9 @@ public class Play implements ActionListener{
 			MediaRender mediaRender = ServerFinder.getMediaRender(mediaRenderIndex);
 			int index = ContentListListener.getSelectedItemIndex();
 			DIDLNode didlNode = DIDL.getDIDLNode(index);
+			
+			RenderingControl renderControl = new RenderingControl(mediaRender);			
+			volumeSlider.setValue(renderControl.getVolume());
 			
 			AVTransport avTransport = new AVTransport(mediaRender);
 			avTransport.setAVTransportURI(didlNode);

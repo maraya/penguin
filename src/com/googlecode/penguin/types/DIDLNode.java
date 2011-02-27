@@ -4,19 +4,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import org.cybergarage.xml.Node;
+
+import com.googlecode.penguin.PenguinConstants;
 import com.googlecode.penguin.utils.interfaces.Container;
 import com.googlecode.penguin.utils.interfaces.Item;
 
 public class DIDLNode implements Item, Container {
 	private Node node;
-	private ImageIcon containerIcon, audioIcon, imageIcon, videoIcon;
 	
 	public DIDLNode (Node node) {
-		this.node = node;
-		this.audioIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/icon_audio.gif"));
-		this.imageIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/icon_image.gif"));
-		this.videoIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/icon_video.gif"));		
-		this.containerIcon = new ImageIcon(Container.class.getResource("/com/googlecode/penguin/resources/icon_folder.gif"));
+		this.node = node;		
 	}	
 	
 	public boolean isContainer() {
@@ -167,22 +164,22 @@ public class DIDLNode implements Item, Container {
 	
 	@Override
 	public ImageIcon getContainerIcon() {
-		return containerIcon;
+		return PenguinConstants.getContainerIcon();
 	}
 	
 	@Override
 	public ImageIcon getAudioIcon() {
-		return audioIcon;
+		return PenguinConstants.getAudioIcon();		
 	}
 
 	@Override
 	public ImageIcon getVideoIcon() {
-		return videoIcon;
+		return PenguinConstants.getVideoIcon();		
 	}
 
 	@Override
 	public ImageIcon getImageIcon() {
-		return imageIcon;
+		return PenguinConstants.getImageIcon();
 	}
 
 	@Override

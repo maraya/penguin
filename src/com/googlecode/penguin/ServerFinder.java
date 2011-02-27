@@ -81,6 +81,14 @@ public class ServerFinder extends ControlPoint implements SearchResponseListener
         }
 	}
 	
+	public static void putMediaServerList(MediaServer mediaServer) {
+		mediaServerList.add(mediaServer);
+	}
+	
+	public static void putMediaRenderList(MediaRender mediaRender) {
+		mediaRenderList.add(mediaRender);
+	}
+	
 	public static MediaServer getMediaServer(int index) {
 		return mediaServerList.get(index);
 	}

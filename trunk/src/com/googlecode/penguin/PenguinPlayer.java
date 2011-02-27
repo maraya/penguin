@@ -2,13 +2,20 @@ package com.googlecode.penguin;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
+import com.googlecode.penguin.dialogs.NewMediaRenderDialog;
+import com.googlecode.penguin.dialogs.NewMediaServerDialog;
 import com.googlecode.penguin.panels.MediaRenderPanel;
 import com.googlecode.penguin.panels.MediaServerPanel;
 
@@ -17,14 +24,32 @@ public class PenguinPlayer extends JFrame {
 	
 	public PenguinPlayer() {		
 		setTitle("Penguin");	
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);		
-		setIconImage(new ImageIcon(PenguinPlayer.class.getResource("resources/icon_audio.gif")).getImage());
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);			
+		setIconImage(PenguinConstants.getPenguinIcon());
 		initComponents();			
 	}
 	
 	private void initComponents() {
 		JPanel mainPanel = new JPanel();
-		JTabbedPane tabs = new JTabbedPane();
+		JTabbedPane tabs = new JTabbedPane();		
+		JMenuBar menuBar = new JMenuBar();		
+		JMenu mainMenu = new JMenu("File");
+		
+		MediaServerPanel mediaServerPanel = new MediaServerPanel();
+        MediaRenderPanel mediaRenderPanel = new MediaRenderPanel();
+		menuBar.add(mainMenu);
+		
+		JMenuItem newMediaServer = new JMenuItem(new NewMediaServerDialog(mediaServerPanel, this));
+		newMediaServer.setText("New MediaServer from location");
+		newMediaServer.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+		mainMenu.add(newMediaServer);
+		
+		JMenuItem newMediaRender = new JMenuItem(new NewMediaRenderDialog(mediaRenderPanel, this));
+		newMediaRender.setText("New MediaRender from location");
+		newMediaRender.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK));
+		mainMenu.add(newMediaRender);
+
+        setJMenuBar(menuBar);
 		mainPanel.setBackground(new Color(255, 255, 255));
 		
         GroupLayout mainPanelLayout = new GroupLayout(mainPanel);        
@@ -53,9 +78,6 @@ public class PenguinPlayer extends JFrame {
                
         pack();
         
-        MediaServerPanel mediaServerPanel = new MediaServerPanel();
-        MediaRenderPanel mediaRenderPanel = new MediaRenderPanel();
-        
         tabs.setBackground(new Color(255, 255, 255));
         tabs.addTab("MediaServers", mediaServerPanel);
         tabs.addTab("MediaRenderers", mediaRenderPanel);
@@ -66,6 +88,7 @@ public class PenguinPlayer extends JFrame {
 	public static void main (String args[]) {
 		EventQueue.invokeLater(new Runnable() {
             public void run() {
+            	new PenguinConstants();
                 new PenguinPlayer().setVisible(true);
             }
         });
